@@ -3,12 +3,15 @@ import javafx.scene.shape.Circle;
 
 public class Ball extends Circle {
     // Variables for ball start and moving position
+    // The dx, dy represent changes in x per frame
+    // JavaFX tries to play at 60 FPS
     private double dx;
     private double dy;
     private double start_x;
     private double start_y;
 
     // Constructor for ball initialization
+    // Takes x, y coordinates and radius
     public Ball(double x, double y, double s) {
         super(x, y, s);
         this.dx = 0;
@@ -56,11 +59,13 @@ public class Ball extends Circle {
 
     // Action for collision with paddle
     public void bounceX() {
+        // We flip the horizontal component
         dx = -dx;
     }
 
     // Action for collision with wall
     public void bounceY() {
+        // We flip the vertical component
         dy = -dy;
     }
 
