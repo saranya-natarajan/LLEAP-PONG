@@ -1,7 +1,3 @@
-package Pong;
-
-import Pong.Ball;
-import Pong.Direction;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 

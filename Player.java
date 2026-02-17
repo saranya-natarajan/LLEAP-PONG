@@ -1,8 +1,3 @@
-package Pong;
-
-import Pong.Direction;
-import Pong.Pad;
-
 public class Player {
     Pad pad; // Player's pad
     int score; // Player's score
