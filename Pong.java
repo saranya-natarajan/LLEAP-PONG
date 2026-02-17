@@ -14,24 +14,29 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /*
- * To build and run:
- * rm Pong/*.class
- * jdk-25.0.2.jdk/Contents/Home/bin/javac --module-path javafx-sdk-25.0.2/lib --add-modules javafx.controls Pong/Pong.java
- * jdk-25.0.2.jdk/Contents/Home/bin/java --module-path javafx-sdk-25.0.2/lib --add-modules javafx.controls --enable-native-access=javafx.graphics Pong.Pong
+ * To build and run, see the README file included.
  */
 public class Pong extends Application {
     public static void main(String[] args) {
+        // Tells JavaFX to handle the launching
+        // For us, the start method is where we define all the code
         launch(args);
     }
 
 
     @Override
     public void start(Stage primaryStage) {
-        // Size of Pong window and margins
+        // Size of Pong window and margins in pixels
+        // The grid starts with the origin (0, 0) in the upper left e.g.:
+        // *-----*-*-*-*-----*
+        // |(0,0)| | | |(4,0)|
+        // *-----*-*-*-*-----*
+        // |(0,1)| | | |(4,1)|
+        // *-----*-*-*-*-----*
         final int WIDTH = 800;
         final int HEIGHT = 600;
         final int MIDDLE = WIDTH / 2;
-        final int MARGIN = 50;
+        final int MARGIN = 50; // needed to display the score and aesthetic
 
         // Position of paddle from the margin
         double p1_position = MARGIN;
@@ -81,16 +86,36 @@ public class Pong extends Application {
 
         // Setting keyboard controls
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            // This can be extended with more keys by adding more case statements
             switch (key.getCode()) {
-                case KeyCode.W: player1.goUp(); break;
-                case KeyCode.S: player1.goDown(); break;
-                case KeyCode.UP: player2.goUp(); break;
-                case KeyCode.DOWN: player2.goDown(); break;
-                case KeyCode.SPACE: ball.start(); message.setText(""); break;
-                case KeyCode.ESCAPE: ball.stop(); break;
+                case KeyCode.W:
+                    player1.goUp();
+                    break;
+                case KeyCode.S:
+                    player1.goDown();
+                    break;
+                case KeyCode.UP:
+                    player2.goUp();
+                    break;
+                case KeyCode.DOWN:
+                    player2.goDown();
+                    break;
+                case KeyCode.SPACE:
+                    ball.start();
+                    // Reset the "press space to start" message.
+                    message.setText("");
+                    break;
+                case KeyCode.ESCAPE:
+                    ball.stop();
+                    break;
             }
         });
 
+        // This animation timer can be used to implement behaviour at
+        // every frame. The handle method is called once every frame, and
+        // provided the current time in nanoseconds
+        // JavaFX should run at around 60 FPS so handle(time) will be called
+        // 60x a second
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -99,15 +124,22 @@ public class Pong extends Application {
                 player2.getPad().move();
                 ball.move();
 
-                // Ball collision with paddles and walls
+                // Ball collision with paddles
                 if (player1.getPad().within(ball) || player2.getPad().within(ball)) {
+                    // We simply flip the direction of travel, so we don't need to
+                    // track which paddle was the one that hit it
                     ball.bounceX();
                 }
+                // Ball collision with walls
+                // Here, we have to do different behaviour per wall
+                // Re-set the center of the ball for more accurate collision tracking
                 if (ball.getCenterY() - ball.getRadius() <= MARGIN) {
+                    // Top wall
                     double diff = MARGIN - (ball.getCenterY() - ball.getRadius());
                     ball.setCenterY(MARGIN + diff + ball.getRadius());
                     ball.bounceY();
                 } else if (ball.getCenterY() + ball.getRadius() >= HEIGHT - MARGIN) {
+                    // Bottom wall
                     double diff = ball.getCenterY() + ball.getRadius() - (HEIGHT - MARGIN);
                     ball.setCenterY(HEIGHT - MARGIN - diff - ball.getRadius());
                     ball.bounceY();
@@ -130,6 +162,7 @@ public class Pong extends Application {
                 ball.reset();
             }
         };
+        // Tells the animation timer to start running
         gameLoop.start();
     }
 }
