@@ -77,4 +77,6 @@ jdk-25.0.2\bin\java --module-path javafx-sdk-25.0.2\lib --add-modules javafx.con
 
 >>>>> MODIFYING THE CODE <<<<<
 
-You can edit the code in whatever text editor you prefer. Visual Studio Code is a popular option. Once you're done editing, just re-run the program as above.
+You can edit the code in whatever text editor you prefer.
+Visual Studio Code is a popular option. Once you're done editing,
+just re-run the program as above.
