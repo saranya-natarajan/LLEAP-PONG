@@ -13,9 +13,9 @@ Explore a Pong game using Java and JavaFX!
 This guide assumes that everything is in your Downloads folder!
 
 [!] IMPORTANT: If you choose another folder than Downloads,
-    you must take different steps later.
+    you must adjust your steps later.
 
-Extract the JDK and JavaFX folders as siblings to the Pong/ folder.
+Extract the JDK and JavaFX folders next to the Pong/ folder.
 Assuming that all three are placed in your downloads folder,
 your structure should look like this:
 
@@ -77,6 +77,7 @@ jdk-25.0.2\bin\java --module-path javafx-sdk-25.0.2\lib --add-modules javafx.con
 
 >>>>> MODIFYING THE CODE <<<<<
 
-You can edit the code in whatever text editor you prefer.
+You can edit the code in whatever text editor you prefer. Please note that
+Word is not a text editor - it will not save your text as a clean text file.
 Visual Studio Code is a popular option. Once you're done editing,
 just re-run the program as above.

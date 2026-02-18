@@ -137,7 +137,6 @@ public class Pong extends Application {
                 }
                 // Ball collision with walls.
                 // Here, we have to do different things depending on which wall we hit.
-                // Re-set the center of the ball for more accurate collision tracking    <--- What does this mean?
                 if (ball.getCenterY() - ball.getRadius() <= MARGIN) {
                     // Top wall
                     double diff = MARGIN - (ball.getCenterY() - ball.getRadius());
