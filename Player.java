@@ -3,8 +3,11 @@ package Pong;
 import Pong.Direction;
 import Pong.Pad;
 
+/*
+ * This file implements a player with a pad and a getScore
+ */
 public class Player {
-    Pad pad; // Player's pad
+    Pad pad;   // Player's pad
     int score; // Player's score
 
     // Player Initialization
@@ -13,7 +16,7 @@ public class Player {
         this.pad = new Pad(x_pos, offset, range + offset);
     }
 
-    // Get player's pad position
+    // Get player's pad
     public Pad getPad() {
         return pad;
     }
@@ -28,17 +31,17 @@ public class Player {
         score++;
     }
 
-    // Move paddle up
+    // Set the direction of the pad to go up
     public void goUp() {
         pad.setDirection(Direction.UP);
     }
 
-    // Move paddle down
+    // Set the direction of the pad to go down
     public void goDown() {
         pad.setDirection(Direction.DOWN);
     }
 
-    // Reset paddle
+    // Reset to initial values
     public void reset() {
         pad.reset();
     }

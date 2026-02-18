@@ -14,40 +14,44 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /*
- * To build and run, see the README file included.
+ * To build and run, see the included README file
  */
 public class Pong extends Application {
     public static void main(String[] args) {
-        // Tells JavaFX to handle the launching
-        // For us, the start method is where we define all the code
+        // Tells JavaFX to handle the launching.
+        // When using JavaFX, the "start" method is where we write the program.
         launch(args);
     }
 
-
     @Override
     public void start(Stage primaryStage) {
-        // Size of Pong window and margins in pixels
-        // The grid starts with the origin (0, 0) in the upper left e.g.:
-        // *-----*-*-*-*-----*
-        // |(0,0)| | | |(4,0)|
-        // *-----*-*-*-*-----*
-        // |(0,1)| | | |(4,1)|
-        // *-----*-*-*-*-----*
+        // Size of Pong window and margins in pixels.
+        // The grid starts with the origin (0, 0) in the upper left, e.g.:
+        // *-----*-----*-----*-----*-----* . . .
+        // |(0,0)|(1,0)|(2,0)|(3,0)|(4,0)|
+        // *-----*-----*-----*-----*-----*
+        // |(0,1)|(1,1)|(2,1)|(3,1)|(4,1)|
+        // *-----*-----*-----*-----*-----*
+        // |(0,2)|(1,2)|(2,2)|(3,2)|(4,2)|
+        // *-----*-----*-----*-----*-----*
+        // .
+        // .
+        // .
         final int WIDTH = 800;
         final int HEIGHT = 600;
         final int MIDDLE = WIDTH / 2;
-        final int MARGIN = 50; // needed to display the score and aesthetic
+        final int MARGIN = 50; // Needed to display the score and aesthetics
 
-        // Position of paddle from the margin
+        // Position of pad
         double p1_position = MARGIN;
         double p2_position = WIDTH - p1_position;
 
-        //JavaFX setup
+        // Setting up the JavaFX application
         Group root = new Group();
         Scene scene = new Scene(root, WIDTH, HEIGHT, Color.BLACK);
         primaryStage.setScene(scene);
 
-        // Line position and its properties
+        // Line positions and their properties
         Line middle_line = new Line(MIDDLE, 0, MIDDLE, HEIGHT);
         middle_line.setStroke(Color.rgb(100, 100, 100));
         Line court_upper = new Line(MARGIN, MARGIN, WIDTH - MARGIN, MARGIN);
@@ -55,19 +59,19 @@ public class Pong extends Application {
         court_upper.setStroke(Color.rgb(255, 255, 255));
         court_lower.setStroke(Color.rgb(255, 255, 255));
 
-        // Player properties
+        // Create two players based on the Player class
         Player player1 = new Player(p1_position, HEIGHT - (2 * MARGIN), MARGIN);
         Player player2 = new Player(p2_position, HEIGHT - (2 * MARGIN), MARGIN);
 
-        // Ball properties
+        // Create a ball
         Ball ball = new Ball(MIDDLE, HEIGHT / 2, 6);
 
-        // Message properties
+        // Create a message display and initial message
         Text message = new Text(100, 30, "Press space to start");
         message.setFill(Color.rgb(255, 255, 255));
         message.setFont(new Font(28));
 
-        //Score properties
+        // Create the score display
         Text score = new Text(15, 30, player1.getScore() + " - " + player2.getScore());
         score.setFill(Color.rgb(255, 255, 255));
         score.setFont(new Font(28));
@@ -102,7 +106,7 @@ public class Pong extends Application {
                     break;
                 case KeyCode.SPACE:
                     ball.start();
-                    // Reset the "press space to start" message.
+                    // Clear the "press space to start" message
                     message.setText("");
                     break;
                 case KeyCode.ESCAPE:
@@ -111,28 +115,29 @@ public class Pong extends Application {
             }
         });
 
-        // This animation timer can be used to implement behaviour at
-        // every frame. The handle method is called once every frame, and
-        // provided the current time in nanoseconds
-        // JavaFX should run at around 60 FPS so handle(time) will be called
-        // 60x a second
+        // This animation timer is used to implement behaviour at every frame.
+        // The handle method is called once every frame, and is provided the
+        // current time in nanoseconds. JavaFX should run at around 60 FPS so
+        // handle(time) will be called approximately 60 times a second. There
+        // is no guaraintee though, so don't build mission critical services
+        // on this assumption.
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // Paddle and ball positions
+                // Pad and ball movement
                 player1.getPad().move();
                 player2.getPad().move();
                 ball.move();
 
-                // Ball collision with paddles
+                // Ball collision with pads
                 if (player1.getPad().within(ball) || player2.getPad().within(ball)) {
                     // We simply flip the direction of travel, so we don't need to
-                    // track which paddle was the one that hit it
+                    // track which pad was the one that hit it
                     ball.bounceX();
                 }
-                // Ball collision with walls
-                // Here, we have to do different behaviour per wall
-                // Re-set the center of the ball for more accurate collision tracking
+                // Ball collision with walls.
+                // Here, we have to do different things depending on which wall we hit.
+                // Re-set the center of the ball for more accurate collision tracking    <--- What does this mean?
                 if (ball.getCenterY() - ball.getRadius() <= MARGIN) {
                     // Top wall
                     double diff = MARGIN - (ball.getCenterY() - ball.getRadius());
@@ -153,7 +158,8 @@ public class Pong extends Application {
                     reset();
                 }
             }
-            // Reset game
+
+            // Reset the game to initial values
             private void reset() {
                 score.setText(player1.getScore() + " - " + player2.getScore());
                 message.setText("Press space to start");
@@ -162,6 +168,7 @@ public class Pong extends Application {
                 ball.reset();
             }
         };
+
         // Tells the animation timer to start running
         gameLoop.start();
     }

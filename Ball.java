@@ -3,25 +3,24 @@ package Pong;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+/*
+ * This file implements a bouncing ball
+ */
 public class Ball extends Circle {
-    // Variables for ball start and moving position
-    // The dx, dy represent changes in x per frame
-    // JavaFX tries to play at 60 FPS
-    private double dx;
-    private double dy;
-    private double start_x;
+    private double dx; // dx and dy are the deltas that the ball will move each frame
+    private double dy; // JavaFX tries to play at 60 FPS
+    private double start_x; // Storing the initial position
     private double start_y;
 
     // Constructor for ball initialization
-    // Takes x, y coordinates and radius
-    public Ball(double x, double y, double s) {
-        super(x, y, s);
+    // Takes X, Y coordinates and radius
+    public Ball(double x, double y, double r) {
+        super(x, y, r);
         this.dx = 0;
         this.dy = 0;
         this.start_x = x;
         this.start_y = y;
         super.setStroke(Color.WHITE);
-
     }
 
     // Get direction of ball movement
@@ -35,7 +34,8 @@ public class Ball extends Circle {
         }
     }
 
-    // Get speed of ball
+    // Get the horizontal speed of the ball. Note that the speed includes a direction.
+    // Positive values are moving right, negative values are moving left.
     public double getSpeed() {
         return dx;
     }
@@ -53,13 +53,13 @@ public class Ball extends Circle {
         dy = 0;
     }
 
-    // Move ball by velocity
+    // Move the ball. Called once per frame.
     public void move() {
         setCenterX(getCenterX() + dx);
         setCenterY(getCenterY() + dy);
     }
 
-    // Action for collision with paddle
+    // Action for collision with pad
     public void bounceX() {
         // We flip the horizontal component
         dx = -dx;

@@ -5,29 +5,30 @@ import Pong.Direction;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/*
+ * This file implements a pong pad that can move up and down.
+ */
 public class Pad extends Rectangle {
-    // The constant speed at which the ball moves
-    private double speed;
-    // The direction, 0 for standing still
-    private int direction;
-    private int lower_limit;
-    private int upper_limit;
-    private double start_y;
+    private double speed;    // The speed at which the ball moves
+    private int direction;   // The direction, 0 for standing still
+    private int lower_limit; // The lowest position of the pad
+    private int upper_limit; // The highest position of the pad
+    private double start_y;  // The initial Y position of the pad
 
-    // Paddle Initialization
-    // Takes the x coordinate and upper, lower limits
+    // Pad initialization
+    // Takes the X coordinate, and lower and upper limits
     public Pad(double x, int ll, int ul) {
+        // 60 is the height of the pad. Unfortunately we can't yet define a variable here.
         super(x, (ul - ll + 60) / 2, 10, 60);
         this.speed = 2;
         this.direction = 0;
         this.lower_limit = ll;
         this.upper_limit = ul;
-        // Start in the middle
-        this.start_y = (ul - ll + 60) / 2;
+        this.start_y = (ul - ll + 60) / 2;  // Start in the middle
         super.setStroke(Color.rgb(255, 255, 255));
     }
 
-    // Set paddle direction
+    // Set pad direction
     public void setDirection(Direction d) {
         switch(d) {
             case Direction.UP:
@@ -39,7 +40,7 @@ public class Pad extends Rectangle {
         }
     }
 
-    // Move paddle within the limit
+    // Move pad within the limit
     public void move() {
         setY(getY() + (speed * direction));
         if (getY() < lower_limit) {
@@ -50,25 +51,27 @@ public class Pad extends Rectangle {
         }
     }
 
-    // Paddle and ball collision
+    // Pad and ball collision
     public boolean within(Ball b) {
         double ball_left_side = b.getCenterX() - b.getRadius();
         double ball_right_side = b.getCenterX() + b.getRadius();
         double pad_left_side = getX();
         double pad_right_side = getX() + getWidth();
 
-        // Check if the y coordinate is within the paddle's current y range
+        // Check if the Y coordinate is within the pad's current Y range
         boolean isYInRange = b.getCenterY() >= getY() && b.getCenterY() <= getY() + getHeight();
-        // Different conditions depending on the side of the paddle that the ball is on
+        // Different conditions depending on which side of the court the pad is on
         boolean rightSide = b.getDirection() == Direction.LEFT &&
-                            // Ball is left of the paddle boundary
+                            // Ball is left of the pad boundary
                             ball_left_side <= pad_right_side &&
-                            // Ball isn't completely over the right paddle boundary
+                            // Ball is within one speed unit from the pad's left side.
+                            // We need to check this to avoid "catching" the ball if the
+                            // pad moves in height with the ball after the ball has passed.
                             ball_left_side >= pad_right_side + b.getSpeed();
         boolean leftSide  = b.getDirection() == Direction.RIGHT &&
-                            // Ball is right of the paddle boundary
+                            // Ball is right of the pad boundary
                             ball_right_side >= pad_left_side &&
-                            // Ball isn't completely over the left paddle boundary
+                            // Same comment as in the rightSide case
                             ball_right_side <= pad_left_side + b.getSpeed();
 
         return isYInRange && (rightSide || leftSide);
