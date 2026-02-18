@@ -65,8 +65,8 @@ Linux:
 ----------
 
 rm Pong/*.class
-jdk-25.0.2.jdk/bin/javac --module-path javafx-sdk-25.0.2/lib --add-modules javafx.controls Pong/Pong.java
-jdk-25.0.2.jdk/bin/java --module-path javafx-sdk-25.0.2/lib --add-modules javafx.controls --enable-native-access=javafx.graphics Pong.Pong
+jdk-25.0.2/bin/javac --module-path javafx-sdk-25.0.2/lib --add-modules javafx.controls Pong/Pong.java
+jdk-25.0.2/bin/java --module-path javafx-sdk-25.0.2/lib --add-modules javafx.controls --enable-native-access=javafx.graphics Pong.Pong
 
 Windows:
 ----------
