@@ -10,7 +10,7 @@ The document is divided into two sections: general hints and specific hints. We 
 # General Hints
 
 ## Changing color of ball
-- Look into [javafx.scene.shape documentation](https://www.example.com)] to find the method that can be used to fill the ball with solid color.
+- Look into [javafx.scene.shape documentation](https://openjfx.io/javadoc/25/javafx.graphics/javafx/scene/shape/package-summary.html)] to find the method that can be used to fill the ball with solid color.
 
 ## Increase the ball’s speed every time it bounces off the pads
 - Identify the variable that represents the ball's horizontal velocity.
