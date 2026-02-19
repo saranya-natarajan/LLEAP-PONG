@@ -12,6 +12,7 @@ public class Ball extends Circle {
     private double start_x; // Storing the initial position
     private double start_y;
     private double gravity;
+    private double wind;
 
     // Constructor for ball initialization
     // Takes X, Y coordinates and radius
@@ -22,6 +23,7 @@ public class Ball extends Circle {
         this.start_x = x;
         this.start_y = y;
         this.gravity = 0;
+        this.wind = 0;
         super.setStroke(Color.rgb(0x80, 0xa0, 0xa0));
         super.setFill(Color.rgb(0x50, 0x80, 0xa0));
     }
@@ -52,6 +54,14 @@ public class Ball extends Circle {
         gravity = g;
     }
 
+    public void activateWind() {
+        wind = 0.03;
+        if (getDirection() == Direction.LEFT) {
+            // If the right player activates the wind it should blow towards left.
+            wind = -wind;
+        }
+    }
+
     // Start ball's movement
     public void start() {
         dx = (Math.random() - 0.5) * 4;
@@ -68,6 +78,7 @@ public class Ball extends Circle {
     // Move the ball. Called once per frame.
     public void move() {
         dy += gravity;
+        dx += wind;
         setCenterX(getCenterX() + dx);
         setCenterY(getCenterY() + dy);
     }
@@ -105,6 +116,7 @@ public class Ball extends Circle {
         dx = 0;
         dy = 0;
         gravity = 0;
+        wind = 0;
     }
 
     public String toString() {

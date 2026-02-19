@@ -32,7 +32,7 @@ public class Pong extends Application {
     }
 
     enum Area {
-        NONE, GRAVITY
+        NONE, GRAVITY, WIND
     }
 
     Area active_area = Area.NONE;
@@ -192,6 +192,9 @@ public class Pong extends Application {
                                 case Area.GRAVITY:
                                     ball.setGravity(0.035);
                                     break;
+                                case Area.WIND:
+                                    ball.activateWind();
+                                    break;
                             }
                             inactivateArea();
                         }
@@ -205,10 +208,9 @@ public class Pong extends Application {
                     if (active_area == Area.NONE) {
                         double lottery = Math.random();
                         if (lottery < 0.001) {
-                            active_area = Area.GRAVITY;
-                            lottery_area.setX(Math.random() * (WIDTH - (2 * MARGIN) - lottery_area.getWidth() + MARGIN));
-                            lottery_area.setFill(Color.GREEN);
-                            lottery_area.setVisible(true);
+                            activateArea(Area.GRAVITY, Color.GREEN);
+                        } else if (lottery < 0.02) {
+                            activateArea(Area.WIND, Color.BLUE);
                         }
                     }
 
@@ -221,6 +223,13 @@ public class Pong extends Application {
                         reset();
                     }
                 }
+            }
+
+            private void activateArea(Area a, Color c) {
+                active_area = a;
+                lottery_area.setX(Math.random() * (WIDTH - (2 * MARGIN) - lottery_area.getWidth() + MARGIN));
+                lottery_area.setFill(c);
+                lottery_area.setVisible(true);
             }
 
             private void inactivateArea() {
