@@ -17,10 +17,20 @@ import javafx.stage.Stage;
  * To build and run, see the included README file
  */
 public class Pong extends Application {
+    enum GameState {
+        STOP, RUN
+    }
+
+    GameState game_state = GameState.STOP;
+
     public static void main(String[] args) {
         // Tells JavaFX to handle the launching.
         // When using JavaFX, the "start" method is where we write the program.
         launch(args);
+    }
+
+    private void setGameState(GameState state) {
+        game_state = state;
     }
 
     @Override
@@ -105,11 +115,14 @@ public class Pong extends Application {
                     player2.goDown();
                     break;
                 case KeyCode.SPACE:
-                    ball.start();
-                    // Clear the "press space to start" message
-                    message.setText("");
+                    if (game_state == GameState.STOP) {
+                        setGameState(GameState.RUN);
+                        ball.start();
+                        message.setText(""); // Clear the "press space to start" message
+                    }
                     break;
                 case KeyCode.ESCAPE:
+                    setGameState(GameState.STOP);
                     ball.stop();
                     break;
             }
@@ -124,54 +137,60 @@ public class Pong extends Application {
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // Pad and ball movement
-                player1.getPad().move();
-                player2.getPad().move();
-                ball.move();
+                // Only do stuff if the game is active
+                if (game_state == GameState.RUN) {
+                    // Pad and ball movement
+                    player1.getPad().move();
+                    player2.getPad().move();
+                    ball.move();
 
-                // Ball collision with pads
-                Pad hit = null;
-                if (player1.getPad().within(ball)) {
-                    hit = player1.getPad();
-                } else if (player2.getPad().within(ball)) {
-                    hit = player2.getPad();
-                }
-                if (hit != null) {
-                    double distance = hit.getCenterDistance(ball.getCenterY());
-                    ball.bounceX(distance * Math.PI / 2);
-                    // After the angle changed, dx might be smaller than before.
-                    // To avoid the ball getting caught in the pad again the next frame,
-                    // move the ball out of the pad.
-                    while (hit.within(ball)) {
-                        ball.move();
+                    // Ball collision with pads
+                    Pad hit = null;
+                    if (player1.getPad().within(ball)) {
+                        hit = player1.getPad();
+                    } else if (player2.getPad().within(ball)) {
+                        hit = player2.getPad();
                     }
-                }
+                    if (hit != null) {
+                        double distance = hit.getCenterDistance(ball.getCenterY());
+                        ball.bounceX(distance * Math.PI / 2);
+                        // After the angle changed, dx might be smaller than before.
+                        // To avoid the ball getting caught in the pad again the next frame,
+                        // move the ball out of the pad.
+                        while (hit.within(ball)) {
+                            ball.move();
+                        }
+                    }
 
-                // Ball collision with walls.
-                if (ball.getCenterY() - ball.getRadius() <= MARGIN) {
-                    // Top wall
-                    double diff = MARGIN - (ball.getCenterY() - ball.getRadius());
-                    ball.setCenterY(MARGIN + diff + ball.getRadius());
-                    ball.bounceY();
-                } else if (ball.getCenterY() + ball.getRadius() >= HEIGHT - MARGIN) {
-                    // Bottom wall
-                    double diff = ball.getCenterY() + ball.getRadius() - (HEIGHT - MARGIN);
-                    ball.setCenterY(HEIGHT - MARGIN - diff - ball.getRadius());
-                    ball.bounceY();
-                }
+                    // Ball collision with walls.
+                    if (ball.getCenterY() - ball.getRadius() <= MARGIN) {
+                        // Top wall
+                        double diff = MARGIN - (ball.getCenterY() - ball.getRadius());
+                        ball.setCenterY(MARGIN + diff + ball.getRadius());
+                        ball.bounceY();
+                    } else if (ball.getCenterY() + ball.getRadius() >= HEIGHT - MARGIN) {
+                        // Bottom wall
+                        double diff = ball.getCenterY() + ball.getRadius() - (HEIGHT - MARGIN);
+                        ball.setCenterY(HEIGHT - MARGIN - diff - ball.getRadius());
+                        ball.bounceY();
+                    }
 
-                // Update score
-                if (ball.getCenterX() < 0) {
-                    player2.score();
-                    reset();
-                } else if (ball.getCenterX() > WIDTH) {
-                    player1.score();
-                    reset();
+                    ball.adjustSpeed(0.001);
+
+                    // Update score
+                    if (ball.getCenterX() < 0) {
+                        player2.score();
+                        reset();
+                    } else if (ball.getCenterX() > WIDTH) {
+                        player1.score();
+                        reset();
+                    }
                 }
             }
 
             // Reset the game to initial values
             private void reset() {
+                setGameState(GameState.STOP);
                 score.setText(player1.getScore() + " - " + player2.getScore());
                 message.setText("Press space to start");
                 player1.reset();

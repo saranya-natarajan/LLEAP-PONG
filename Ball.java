@@ -34,9 +34,14 @@ public class Ball extends Circle {
         }
     }
 
-    // Get the horizontal speed of the ball. Note that the speed includes a direction.
-    // Positive values are moving right, negative values are moving left.
+    // Get the length of the speed vector
     public double getSpeed() {
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Get the horizontal speed component. Note that the speed includes a direction.
+    // Positive values are moving right, negative values are moving left.
+    public double getSpeedX() {
         return dx;
     }
 
@@ -59,12 +64,19 @@ public class Ball extends Circle {
         setCenterY(getCenterY() + dy);
     }
 
+    // Modify the speed vector length
+    public void adjustSpeed(double addend) {
+        double factor = addend / getSpeed(); // Calculate the percentual difference
+        dx *= (factor + 1);
+        dy *= (factor + 1);
+    }
+
     // Action for collision with pad
     public void bounceX(double angle) {
         Direction d = getDirection();
         // To preserve the speed we calculate the vector length of (dx,dy)
         // and use that to calculate the new X and Y components given the angle.
-        double speed = Math.sqrt(dx * dx + dy * dy);
+        double speed = getSpeed();
         dx = speed * Math.cos(angle);
         dy = speed * Math.sin(angle);
         if (d == Direction.RIGHT) {

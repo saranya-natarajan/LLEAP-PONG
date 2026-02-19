@@ -20,7 +20,7 @@ public class Pad extends Rectangle {
     public Pad(double x, int ll, int ul) {
         // 60 is the height of the pad. Unfortunately we can't yet define a variable here.
         super(x, (ul - ll + 60) / 2, 10, 60);
-        this.speed = 2;
+        this.speed = 4;
         this.direction = 0;
         this.lower_limit = ll;
         this.upper_limit = ul;
@@ -73,12 +73,12 @@ public class Pad extends Rectangle {
                             // Ball is within one speed unit from the pad's left side.
                             // We need to check this to avoid "catching" the ball if the
                             // pad moves in height with the ball after the ball has passed.
-                            ball_left_side >= pad_right_side + b.getSpeed();
+                            ball_left_side >= pad_right_side + b.getSpeedX();
         boolean leftSide  = b.getDirection() == Direction.RIGHT &&
                             // Ball is right of the pad boundary
                             ball_right_side >= pad_left_side &&
                             // Same comment as in the rightSide case
-                            ball_right_side <= pad_left_side + b.getSpeed();
+                            ball_right_side <= pad_left_side + b.getSpeedX();
 
         return isYInRange && (rightSide || leftSide);
     }
