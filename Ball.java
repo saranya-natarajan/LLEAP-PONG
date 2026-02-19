@@ -20,7 +20,8 @@ public class Ball extends Circle {
         this.dy = 0;
         this.start_x = x;
         this.start_y = y;
-        super.setStroke(Color.WHITE);
+        super.setStroke(Color.rgb(0x80, 0xa0, 0xa0));
+        super.setFill(Color.rgb(0x50, 0x80, 0xa0));
     }
 
     // Get direction of ball movement

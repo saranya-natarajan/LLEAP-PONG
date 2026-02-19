@@ -20,12 +20,13 @@ public class Pad extends Rectangle {
     public Pad(double x, int ll, int ul) {
         // 60 is the height of the pad. Unfortunately we can't yet define a variable here.
         super(x, (ul - ll + 60) / 2, 10, 60);
-        this.speed = 4;
+        this.speed = 3;
         this.direction = 0;
         this.lower_limit = ll;
         this.upper_limit = ul;
         this.start_y = (ul - ll + 60) / 2;  // Start in the middle
-        super.setStroke(Color.rgb(255, 255, 255));
+        super.setStroke(Color.rgb(0x40, 0xa0, 0xc0));
+        super.setFill(Color.rgb(0x80, 0xc0, 0xf0));
     }
 
     // Return the distance from the center of the pad in percent of the pad size

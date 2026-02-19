@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
@@ -59,15 +62,18 @@ public class Pong extends Application {
         // Setting up the JavaFX application
         Group root = new Group();
         Scene scene = new Scene(root, WIDTH, HEIGHT, Color.BLACK);
+        Stop[] stops = { new Stop(0, Color.rgb(0x80, 0xa0, 0xff)), new Stop(1, Color.rgb(0x80, 0xff, 0xa0))};
+        RadialGradient background = new RadialGradient(0.25, 0.5, 100, 100, 500, false, CycleMethod.NO_CYCLE, stops);
+        scene.setFill(background);
         primaryStage.setScene(scene);
 
         // Line positions and their properties
         Line middle_line = new Line(MIDDLE, 0, MIDDLE, HEIGHT);
-        middle_line.setStroke(Color.rgb(100, 100, 100));
+        middle_line.setStroke(Color.rgb(0x80, 0x80, 0x80));
         Line court_upper = new Line(MARGIN, MARGIN, WIDTH - MARGIN, MARGIN);
         Line court_lower = new Line(MARGIN, HEIGHT - MARGIN, WIDTH - MARGIN, HEIGHT - MARGIN);
-        court_upper.setStroke(Color.rgb(255, 255, 255));
-        court_lower.setStroke(Color.rgb(255, 255, 255));
+        court_upper.setStroke(Color.rgb(0x20, 0x20, 0x20));
+        court_lower.setStroke(Color.rgb(0x20, 0x20, 0x20));
 
         // Create two players based on the Player class
         Player player1 = new Player(p1_position, HEIGHT - (2 * MARGIN), MARGIN);
@@ -78,12 +84,12 @@ public class Pong extends Application {
 
         // Create a message display and initial message
         Text message = new Text(100, 30, "Press space to start");
-        message.setFill(Color.rgb(255, 255, 255));
+        message.setFill(Color.BLACK);
         message.setFont(new Font(28));
 
         // Create the score display
         Text score = new Text(15, 30, player1.getScore() + " - " + player2.getScore());
-        score.setFill(Color.rgb(255, 255, 255));
+        score.setFill(Color.BLACK);
         score.setFont(new Font(28));
 
         // Setting up the board
