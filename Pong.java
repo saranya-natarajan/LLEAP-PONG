@@ -130,13 +130,24 @@ public class Pong extends Application {
                 ball.move();
 
                 // Ball collision with pads
-                if (player1.getPad().within(ball) || player2.getPad().within(ball)) {
-                    // We simply flip the direction of travel, so we don't need to
-                    // track which pad was the one that hit it
-                    ball.bounceX();
+                Pad hit = null;
+                if (player1.getPad().within(ball)) {
+                    hit = player1.getPad();
+                } else if (player2.getPad().within(ball)) {
+                    hit = player2.getPad();
                 }
+                if (hit != null) {
+                    double distance = hit.getCenterDistance(ball.getCenterY());
+                    ball.bounceX(distance * Math.PI / 2);
+                    // After the angle changed, dx might be smaller than before.
+                    // To avoid the ball getting caught in the pad again the next frame,
+                    // move the ball out of the pad.
+                    while (hit.within(ball)) {
+                        ball.move();
+                    }
+                }
+
                 // Ball collision with walls.
-                // Here, we have to do different things depending on which wall we hit.
                 if (ball.getCenterY() - ball.getRadius() <= MARGIN) {
                     // Top wall
                     double diff = MARGIN - (ball.getCenterY() - ball.getRadius());
@@ -148,6 +159,7 @@ public class Pong extends Application {
                     ball.setCenterY(HEIGHT - MARGIN - diff - ball.getRadius());
                     ball.bounceY();
                 }
+
                 // Update score
                 if (ball.getCenterX() < 0) {
                     player2.score();

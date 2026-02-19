@@ -60,9 +60,16 @@ public class Ball extends Circle {
     }
 
     // Action for collision with pad
-    public void bounceX() {
-        // We flip the horizontal component
-        dx = -dx;
+    public void bounceX(double angle) {
+        Direction d = getDirection();
+        // To preserve the speed we calculate the vector length of (dx,dy)
+        // and use that to calculate the new X and Y components given the angle.
+        double speed = Math.sqrt(dx * dx + dy * dy);
+        dx = speed * Math.cos(angle);
+        dy = speed * Math.sin(angle);
+        if (d == Direction.RIGHT) {
+            dx = -dx;
+        }
     }
 
     // Action for collision with wall

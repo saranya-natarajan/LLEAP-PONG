@@ -28,6 +28,12 @@ public class Pad extends Rectangle {
         super.setStroke(Color.rgb(255, 255, 255));
     }
 
+    // Return the distance from the center of the pad in percent of the pad size
+    double getCenterDistance(double y) {
+        double halfHeight = getHeight() / 2;
+        return (y - getY() - halfHeight) / halfHeight;
+    }
+
     // Set pad direction
     public void setDirection(Direction d) {
         switch(d) {
