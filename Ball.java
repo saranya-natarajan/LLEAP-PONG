@@ -11,6 +11,7 @@ public class Ball extends Circle {
     private double dy; // JavaFX tries to play at 60 FPS
     private double start_x; // Storing the initial position
     private double start_y;
+    private double gravity;
 
     // Constructor for ball initialization
     // Takes X, Y coordinates and radius
@@ -20,6 +21,7 @@ public class Ball extends Circle {
         this.dy = 0;
         this.start_x = x;
         this.start_y = y;
+        this.gravity = 0;
         super.setStroke(Color.rgb(0x80, 0xa0, 0xa0));
         super.setFill(Color.rgb(0x50, 0x80, 0xa0));
     }
@@ -46,6 +48,10 @@ public class Ball extends Circle {
         return dx;
     }
 
+    public void setGravity(double g) {
+        gravity = g;
+    }
+
     // Start ball's movement
     public void start() {
         dx = (Math.random() - 0.5) * 4;
@@ -61,6 +67,7 @@ public class Ball extends Circle {
 
     // Move the ball. Called once per frame.
     public void move() {
+        dy += gravity;
         setCenterX(getCenterX() + dx);
         setCenterY(getCenterY() + dy);
     }
@@ -97,5 +104,10 @@ public class Ball extends Circle {
         setCenterY(start_y);
         dx = 0;
         dy = 0;
+        gravity = 0;
+    }
+
+    public String toString() {
+        return "[dx: " + dx + " dy: " + dy + "]";
     }
 }

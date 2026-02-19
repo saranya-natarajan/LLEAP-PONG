@@ -12,6 +12,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -26,14 +27,20 @@ public class Pong extends Application {
 
     GameState game_state = GameState.STOP;
 
+    private void setGameState(GameState state) {
+        game_state = state;
+    }
+
+    enum Area {
+        NONE, GRAVITY
+    }
+
+    Area active_area = Area.NONE;
+
     public static void main(String[] args) {
         // Tells JavaFX to handle the launching.
         // When using JavaFX, the "start" method is where we write the program.
         launch(args);
-    }
-
-    private void setGameState(GameState state) {
-        game_state = state;
     }
 
     @Override
@@ -82,6 +89,9 @@ public class Pong extends Application {
         // Create a ball
         Ball ball = new Ball(MIDDLE, HEIGHT / 2, 6);
 
+        Rectangle lottery_area = new Rectangle(0, HEIGHT - MARGIN, 100, 5);
+        lottery_area.setVisible(false);
+
         // Create a message display and initial message
         Text message = new Text(100, 30, "Press space to start");
         message.setFill(Color.BLACK);
@@ -101,6 +111,7 @@ public class Pong extends Application {
         root.getChildren().add(player1.getPad());
         root.getChildren().add(player2.getPad());
         root.getChildren().add(ball);
+        root.getChildren().add(lottery_area);
 
         primaryStage.show();
 
@@ -176,12 +187,30 @@ public class Pong extends Application {
                         ball.bounceY();
                     } else if (ball.getCenterY() + ball.getRadius() >= HEIGHT - MARGIN) {
                         // Bottom wall
+                        if (active_area != Area.NONE && ball.getCenterX() > lottery_area.getX() && ball.getCenterX() < lottery_area.getX() + lottery_area.getWidth()) {
+                            switch (active_area) {
+                                case Area.GRAVITY:
+                                    ball.setGravity(0.035);
+                                    break;
+                            }
+                            inactivateArea();
+                        }
                         double diff = ball.getCenterY() + ball.getRadius() - (HEIGHT - MARGIN);
                         ball.setCenterY(HEIGHT - MARGIN - diff - ball.getRadius());
                         ball.bounceY();
                     }
 
                     ball.adjustSpeed(0.001);
+
+                    if (active_area == Area.NONE) {
+                        double lottery = Math.random();
+                        if (lottery < 0.001) {
+                            active_area = Area.GRAVITY;
+                            lottery_area.setX(Math.random() * (WIDTH - (2 * MARGIN) - lottery_area.getWidth() + MARGIN));
+                            lottery_area.setFill(Color.GREEN);
+                            lottery_area.setVisible(true);
+                        }
+                    }
 
                     // Update score
                     if (ball.getCenterX() < 0) {
@@ -194,6 +223,11 @@ public class Pong extends Application {
                 }
             }
 
+            private void inactivateArea() {
+                active_area = Area.NONE;
+                lottery_area.setVisible(false);
+            }
+
             // Reset the game to initial values
             private void reset() {
                 setGameState(GameState.STOP);
@@ -202,6 +236,7 @@ public class Pong extends Application {
                 player1.reset();
                 player2.reset();
                 ball.reset();
+                inactivateArea();
             }
         };
 
